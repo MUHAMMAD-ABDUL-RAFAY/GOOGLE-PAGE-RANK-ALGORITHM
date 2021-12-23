@@ -1,0 +1,62 @@
+import numpy as np
+import sympy as sy
+#this commented code is for providing user based matrix instead of predefined matrix 
+#R = int(input("Enter the number of rows:"))
+#C = int(input("Enter the number of columns:"))
+#matrix = []
+#print("Enter the entries rowwise:")
+#for i in range(R):
+#    a =[]
+#    for j in range(C):     
+#         a.append(float(input()))
+#    matrix.append(a)
+#for i in range(R):
+ #   for j in range(C):
+#        print(matrix[i][j], end = " ")
+#    print()
+#-------------------------------------------------------------------------------------------------------------------------------
+#given here is the final matrix after applying probability
+# = int(input("Enter the number of rows:"))
+# = int(input("Enter the number of rows:"))
+#in our system we have taken 6X6 matrix 
+R = 6 # fixed rows 6
+C = 6 # fixed columns 6
+if R != C:
+    print("NOT A SQUARE MATRIX") #eigen vectors and eigen values are only possible for sqaure matrix so here's the check
+else:
+    #final matrix after applying probabilty
+    mat = sy.Matrix([[0,0,0,0,0.5,0],
+                    [0.25,0,0,0,0,0],
+                    [0,0.5,0,0,0,0],
+                    [0.25,0.5,0,0,0.5,0],
+                    [0.25,0,1,1,0,1],
+                    [0.25,0,0,0,0,0]])
+    ans = np.array(mat.tolist()).astype(np.float64)
+    w,v = np.linalg.eig(ans) # w contains eigen vector(not taking)  but v contains eigen value
+    list_free = []
+    for i in range(R):
+        if w[i] > 0:  #taking only real and postive eigen values because range can never be negtive or imaginary
+            print("EIGEN VALUE",int(w[i]))
+            temp = w[i]
+            for i in range(R):
+                for j in range(C):
+                    if i == j:
+                        mat[i,j] = mat[i,j] - int(temp)
+    page_info = []
+    tup = mat.rref()
+    print("ROW REDUCED ECHELON FORM OF MATRIX CORRESPONDING TO EIGEN VALUE : ",int(temp))
+    print(tup)
+    print("NUMBER OF PIVOTS IN MATRIX : ",len(tup[1]))
+    print("PIVOTS IN COLUMNS : ",tup[1])
+    pages_mat = tup[0]
+    var = tup[0].nullspace() #for solving Ax = 0 system to get the eigen vector
+    print("SOLUTION OF AX=0 SYSTEM")
+    print(var)
+    for i in range (R):
+        page_info.append(var[0][i])
+    print("EIGEN VECTORS : ",page_info,"FOR EIGEN VALUE : ",int(temp))
+    max_value = max(page_info)
+    max_index = page_info.index(max_value)
+    print("------------------------------------------------------------------------")
+    print("PAGE",max_index+1," IS MORE IMPORTANT") #here index is added with 1 because index start from 0
+    print("------------------------------------------------------------------------")
